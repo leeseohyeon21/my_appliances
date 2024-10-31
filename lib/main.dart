@@ -1,5 +1,7 @@
 import 'package:beamer/beamer.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:my_appliances/firebase_options.dart';
 import 'package:my_appliances/router/locations.dart';
 import 'package:my_appliances/screens/start/auth_page.dart';
 import 'package:my_appliances/screens/start_screen.dart';
@@ -11,18 +13,29 @@ import 'package:my_appliances/router/router.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   @override
   Widget build(BuildContext context) {
 
     //퓨처 함수로 로딩구현
     return FutureBuilder<Object>(
-      future: Future.delayed(Duration(seconds: 3), () => 100),
+      future: _initialization,
       builder: (context, snapshot) {
         return AnimatedSwitcher(
           duration: Duration(milliseconds: 900),  //페이드인아웃 효과
@@ -37,10 +50,20 @@ class MyApp extends StatelessWidget {
     // );
   }
 
-  StatelessWidget _splashLodingWidget(AsyncSnapshot<Object> snapshot) {
-    if(snapshot.hasError) {print('에러가 발생하였습니다.'); return Text('Error');}
-    else if(snapshot.hasData) {return MyAppliances();}
-    else{return SplashScreen();}
+  Widget _splashLodingWidget(AsyncSnapshot<Object?> snapshot) {
+    if(snapshot.hasError) {
+      print('에러가 발생하였습니다.'); 
+      return MaterialApp(
+        home: Scaffold(
+          body: Center(child: Text('Error: &{snapshot.error}')),
+        ),
+      );
+    } else if(snapshot.connectionState == ConnectionState.done) {
+      return MyAppliances();
+    }
+    else{
+      return SplashScreen();
+    }
   }
 }
 
