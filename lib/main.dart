@@ -43,11 +43,6 @@ class _MyAppState extends State<MyApp> {
         );
       }
     );
-    // return MaterialApp(
-    //   title: 'My Appliances',
-    //   theme: ThemeData(primarySwatch: Colors.blue),
-    //   home: MyHomePage(),
-    // );
   }
 
   Widget _splashLodingWidget(AsyncSnapshot<Object?> snapshot) {

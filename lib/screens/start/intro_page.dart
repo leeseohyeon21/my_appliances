@@ -10,7 +10,6 @@ class IntroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    logger.d('current user state: ${context.read<UserProvider>().userState}');
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),

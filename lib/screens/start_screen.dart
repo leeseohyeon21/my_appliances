@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_appliances/screens/home_screen.dart';
 import 'package:my_appliances/screens/start/address_page.dart';
 import 'package:my_appliances/screens/start/auth_page.dart';
 import 'package:my_appliances/screens/start/intro_page.dart';
@@ -22,7 +23,7 @@ class StartScreen extends StatelessWidget {
           children: [
             IntroPage(),
             AuthPage(),
-            AddressPage(),
+            HomeScreen(),
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:my_appliances/states/user_provider.dart';
@@ -22,18 +23,14 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('나의 가전', style: Theme.of(context).appBarTheme.titleTextStyle),
         actions: [
           IconButton(onPressed: (){
-            context.read<UserProvider>().SetUserAuth(false);
+            FirebaseAuth.instance.signOut();
           },
               icon: Icon(Icons.search)
           ),
-          IconButton(onPressed: (){
-            context.read<UserProvider>().SetUserAuth(false);
-          },
+          IconButton(onPressed: (){},
               icon: Icon(Icons.list)
           ),
-          IconButton(onPressed: (){
-            context.read<UserProvider>().SetUserAuth(false);
-          },
+          IconButton(onPressed: (){},
               icon: Icon(Icons.notifications)
           ),
         ],
@@ -42,9 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _bottomSelectedIndex,
         children: [
           ItemPage(),
-          Container(
-            color: Colors.accents[0],
-          ),
           Container(
             color: Colors.accents[4],
           ),
@@ -58,11 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _bottomSelectedIndex,
-          onTap: (index){
-            setState(() {
-              _bottomSelectedIndex = index;
-            });
-          },
+
         type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
@@ -93,7 +83,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         : 'assets/icons/user.png'),),
                 label: '내정보'
             ),
-          ]
+          ],
+        onTap: (index){
+          setState(() {
+            _bottomSelectedIndex = index;
+          });
+        },
       ),
     );
   }
