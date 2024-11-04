@@ -20,10 +20,11 @@ class UserModel{
     required this.createdDate,
     this.reference,});
 
-  UserModel.fromJson(Map<String, dynamic> json, this.userKey, this.reference) {
-    phoneNumber = json['phoneNumber'];
-    createdDate = json['createdDate'] == null? DateTime.now().toUtc() : (json['createdDate'] as Timestamp).toDate();
-  }
+  UserModel.fromJson(Map<String, dynamic> json, this.userKey, this.reference)
+    : phoneNumber = json['phoneNumber'],
+    createdDate = json['createdDate'] == null
+        ? DateTime.now().toUtc()
+        : (json['createdDate'] as Timestamp).toDate();
 
   UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot)
     : this.fromJson(snapshot.data()!, snapshot.id, snapshot.reference);

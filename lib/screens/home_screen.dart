@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:my_appliances/main.dart';
+import 'package:my_appliances/widget/expandablefab.dart';
 import 'package:provider/provider.dart';
 import 'package:my_appliances/states/user_provider.dart';
 
@@ -24,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(onPressed: (){
             FirebaseAuth.instance.signOut();
+            context.go('/');
           },
               icon: Icon(Icons.search)
           ),
@@ -50,6 +54,26 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      floatingActionButton: ExpandableFab(
+          distance: 90,
+          children: [
+            MaterialButton(
+                onPressed: (){
+                  context.push('/input');
+                },
+                shape: CircleBorder(),
+                height: 40,
+                color: Theme.of(context).colorScheme.primary,
+                child: Icon(Icons.add),
+            ),
+            MaterialButton(
+              onPressed: (){},
+              shape: CircleBorder(),
+              height: 40,
+              color: Theme.of(context).colorScheme.primary,
+              child: Icon(Icons.add),
+            ),
+          ]),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _bottomSelectedIndex,
 

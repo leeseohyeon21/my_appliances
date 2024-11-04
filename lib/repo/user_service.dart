@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:my_appliances/constants/data_key.dart';
+import 'package:my_appliances/constants/data_keys.dart';
 import 'package:my_appliances/data/user_model.dart';
 import 'package:my_appliances/utils/logger.dart';
 

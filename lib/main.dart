@@ -80,7 +80,7 @@ class MyAppliances extends StatelessWidget {
           textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(
               backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
+              foregroundColor: Colors.green,
               minimumSize: Size(48, 48)
             ),
           ),
@@ -89,9 +89,11 @@ class MyAppliances extends StatelessWidget {
             titleLarge: TextStyle(fontSize: 17, color: Colors.black87),
             titleMedium: TextStyle(fontSize: 13,color: Colors.black38),
             labelLarge: TextStyle(color: Colors.white),
+            bodyMedium: TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.w300)
           ),
           appBarTheme: AppBarTheme(
             backgroundColor: Colors.white,
+            foregroundColor: Colors.black87,
             titleTextStyle: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w700),
             elevation: 2,
             actionsIconTheme: IconThemeData(color: Colors.black),
@@ -122,7 +124,7 @@ class MyAppliances extends StatelessWidget {
 //       showPage: BeamPage(child: StartScreen()))],
 //
 //       locationBuilder: BeamerLocationBuilder(
-//           beamLocations: [HomeLocation()]
+//           beamLocations: [HomeLocation(), InputLocation()]
 //       )
 // );
 //
