@@ -120,7 +120,11 @@ class MyAppliances extends StatelessWidget {
 //   //비머가드
 //   //pathPatterns: 방어하고 싶은 경로값, check: 조건 충족 여부
 //   guards: [BeamGuard(
-//       pathPatterns: ['/'],
+//       pathPatterns: [
+//          ...HomeLocation().pathBluepatterns,
+//          ...InputLocation().pathBluepatterns,
+//          ...ItemLocation().pathBluepatterns
+//       ],
 //       check: (context, location) {
 //         final userState = context.read<UserProvider>().userState;
 //         print("User state: $userState");
@@ -129,7 +133,7 @@ class MyAppliances extends StatelessWidget {
 //       showPage: BeamPage(child: StartScreen()))],
 //
 //       locationBuilder: BeamerLocationBuilder(
-//           beamLocations: [HomeLocation(), InputLocation()]
+//           beamLocations: [HomeLocation(), InputLocation(), ItemLocation()]
 //       )
 // );
 //

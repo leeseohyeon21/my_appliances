@@ -2,19 +2,26 @@ import 'package:go_router/go_router.dart';
 import 'package:my_appliances/input/category_input_screen.dart';
 import 'package:my_appliances/input/input_screen.dart';
 import 'package:my_appliances/screens/home_screen.dart';
+import 'package:my_appliances/screens/item/item_detail_screen.dart';
 import 'package:my_appliances/screens/start_screen.dart';
 import 'package:my_appliances/states/category_notifier.dart';
 import 'package:my_appliances/states/select_image_notifier.dart';
 import 'package:my_appliances/states/user_notifier.dart';
-import 'package:my_appliances/utils/logger.dart';
 import 'package:provider/provider.dart';
+
+const LOCATION_HOME = 'home';
+const LOCATION_INPUT = 'input';
+const LOCATION_CATEGORY_INPUT = 'category_input';
+const LOCATION_ITEM = 'item';
+const LOCATION_ITEM_ID = 'item_id';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
   redirect: (context, state) {
     final userNotifier = Provider.of<UserNotifier>(context, listen: false);
+    final userState = userNotifier.user;
 
-    if (userNotifier.user == null) {
+    if (userState == null && state.uri.toString() != '/') {
       return '/';
     }
     return null;
@@ -25,11 +32,11 @@ final GoRouter router = GoRouter(
       builder: (context, state) => StartScreen(),
     ),
     GoRoute(
-      path: '/home',
+      path: '/$LOCATION_HOME',
       builder: (context, state) => HomeScreen(),
     ),
     GoRoute(
-      path: '/input',
+      path: '/$LOCATION_INPUT',
       builder: (context, state) {
         return MultiProvider(
           providers: [
@@ -41,7 +48,7 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/input/category_input',
+      path: '/$LOCATION_INPUT/$LOCATION_CATEGORY_INPUT',
       builder: (context, state) {
         return MultiProvider(
           providers: [
@@ -50,6 +57,13 @@ final GoRouter router = GoRouter(
           ],
           child: CategoryInputScreen(),
         );
+      },
+    ),
+    GoRoute(
+      path: '/$LOCATION_ITEM/:$LOCATION_ITEM_ID',
+      builder: (context, state) {
+        final itemId = state.pathParameters[LOCATION_ITEM_ID] ?? '';
+        return ItemDetailScreen(itemId);
       },
     ),
   ],

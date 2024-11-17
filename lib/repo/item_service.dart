@@ -18,6 +18,9 @@ class ItemService{
   }
 
   Future<ItemModel> getItem(String itemKey) async{
+    if(itemKey[0] == ':'){
+      itemKey = itemKey.substring(1);
+    }
     DocumentReference<Map<String, dynamic>> documentReference =
         FirebaseFirestore.instance.collection(COL_USER_ITEMS).doc(itemKey);
     final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =

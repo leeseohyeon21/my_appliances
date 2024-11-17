@@ -1,9 +1,11 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_appliances/constants/common_size.dart';
 import 'package:my_appliances/data/item_model.dart';
 import 'package:my_appliances/repo/item_service.dart';
+import 'package:my_appliances/router/router.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ItemPage extends StatelessWidget {
@@ -55,7 +57,9 @@ class ItemPage extends StatelessWidget {
         itemBuilder: (context, index){
           ItemModel item = items[index];
           return InkWell(
-            onTap: (){},
+            onTap: (){
+              context.go('/$LOCATION_ITEM/:${item.itemKey}');
+            },
             child: SizedBox(
               height: imgSize,
               child: Row(

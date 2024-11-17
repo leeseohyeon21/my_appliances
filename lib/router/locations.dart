@@ -3,12 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_appliances/input/category_input_screen.dart';
 import 'package:my_appliances/input/input_screen.dart';
-import 'package:my_appliances/screens/start_screen.dart';
-import 'package:my_appliances/screens/start/auth_page.dart';
+import 'package:my_appliances/screens/item/item_detail_screen.dart';
 import 'package:my_appliances/screens/home_screen.dart';
 import 'package:my_appliances/states/category_notifier.dart';
 import 'package:my_appliances/states/select_image_notifier.dart';
 import 'package:provider/provider.dart';
+
+const LOCATION_HOME = 'home';
+const LOCATION_INPUT = 'input';
+const LOCATION_CATEGORY_INPUT = 'category_input';
+const LOCATION_ITEM = 'item';
+const LOCATION_ITEM_ID = 'item_id';
 
 class HomeLocation extends BeamLocation<BeamState>{
   @override
@@ -45,12 +50,31 @@ class InputLocation extends BeamLocation<BeamState> {
     if(state.pathPatternSegments.contains('category_input'))
       BeamPage(
         child: CategoryInputScreen(),
-        key: ValueKey('category_inpu')
+        key: ValueKey('category_input')
       )
     ];
   }
 
   @override
   List<String> get pathPatterns => ['/input'];
+
+}
+
+class ItemLocation extends BeamLocation<BeamState> {
+
+  @override
+  List<BeamPage> buildPages(BuildContext context, BeamState state){
+    throw [
+      ...HomeLocation().buildPages(context, state),
+      if(state.pathParameters.containsKey(LOCATION_ITEM_ID))
+        BeamPage(
+          child: ItemDetailScreen(state.pathParameters[LOCATION_ITEM_ID] ?? ''),
+          key: ValueKey(LOCATION_ITEM_ID)
+        )
+    ];
+  }
+
+  @override
+  List<Pattern> get pathPatterns => ['/$LOCATION_ITEM:$LOCATION_ITEM_ID'];
 
 }
