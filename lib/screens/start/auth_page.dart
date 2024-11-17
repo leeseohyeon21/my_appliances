@@ -1,11 +1,9 @@
-import 'package:extended_image/extended_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:my_appliances/constants/common_size.dart';
-import 'package:my_appliances/screens/start/intro_page.dart';
-import 'package:my_appliances/states/user_provider.dart';
+import 'package:my_appliances/data/user_model.dart';
+import 'package:my_appliances/states/user_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:my_appliances/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,11 +66,6 @@ class _AuthPageState extends State<AuthPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                     Row(children: [
-                      ExtendedImage.asset(
-                        'assets/images/temp.jpg',
-                        width: size.width*0.25,
-                        height: size.width*0.25
-                      ),
                       SizedBox(width: common_sm_padding),
                       Text('나의 가전은 전화번호로 가입합니다.\n여러분의 개인정보는 안전히 보관되며,\n외부에 노출되지 않습니다.',
                         style: TextStyle(fontSize: 13)),
@@ -152,7 +145,8 @@ class _AuthPageState extends State<AuthPage> {
                           ?SizedBox(
                             height: 26, width: 26,
                             child: CircularProgressIndicator(color: Colors.white),)
-                          :Text('인증문자 발송'),),
+                          :Text('인증문자 발송',
+                            style: Theme.of(context).textTheme.labelLarge,),),
                   SizedBox(
                       height: common_bg_padding
                   ),
@@ -187,7 +181,8 @@ class _AuthPageState extends State<AuthPage> {
                       },
                       child: (_verificationStatus == VerificationStatus.verifying)
                         ?CircularProgressIndicator(color: Colors.white)
-                        : Text('인증하기'),),
+                        : Text('인증하기',
+                          style: Theme.of(context).textTheme.labelLarge,),),
                   ),
                   ],),
                 ),
@@ -251,13 +246,6 @@ class _AuthPageState extends State<AuthPage> {
       _verificationStatus = VerificationStatus.verificationDone;
     });
   }
-
-  _getAddress() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String address = prefs.getString('address') ?? "";
-    logger.d("Address from shared Pref - $address");
-  }
-
 }
 
 //검증상태 관리

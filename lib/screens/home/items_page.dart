@@ -2,7 +2,8 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_appliances/constants/common_size.dart';
-import 'package:my_appliances/repo/user_service.dart';
+import 'package:my_appliances/data/item_model.dart';
+import 'package:my_appliances/repo/item_service.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ItemPage extends StatelessWidget {
@@ -16,20 +17,30 @@ class ItemPage extends StatelessWidget {
         Size size = MediaQuery.of(context).size;
         final imgSize = size.width / 4;
 
-        return FutureBuilder(
-          future: Future.delayed(Duration(seconds: 2),),
+        return FutureBuilder<List<ItemModel>>(
+          future: ItemService().getItems(),
           builder: (context, snapshot){
-            return AnimatedSwitcher(
-              duration: Duration(milliseconds: 600),
-              child: (snapshot.connectionState != ConnectionState.done)
-                ?_shimmerListView(imgSize)
-                :_listView(imgSize));
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              return _listView(imgSize, snapshot.data!);
+            } else {
+              return _shimmerListView(imgSize);
+            }
+            //return AnimatedSwitcher(
+            //  duration: Duration(milliseconds: 600),
+            //  child: (snapshot.hasData && snapshot.data!.isNotEmpty)
+            //    ?_listView(imgSize, snapshot.data!)
+            //    :_shimmerListView(imgSize));
           });
       },
     );
   }
 
-  ListView _listView(double imgSize) {
+  ListView _listView(double imgSize, List<ItemModel> items) {
+    //if(items.isEmpty){
+    //  return Center(child: Text("No items available"));
+    //}
     return ListView.separated(
         separatorBuilder: (context, index){
           return Divider(
@@ -42,10 +53,9 @@ class ItemPage extends StatelessWidget {
         },
         padding: EdgeInsets.all(common_bg_padding),
         itemBuilder: (context, index){
+          ItemModel item = items[index];
           return InkWell(
-            onTap: (){
-              //UserService().fireStoreReadTest();
-            },
+            onTap: (){},
             child: SizedBox(
               height: imgSize,
               child: Row(
@@ -54,7 +64,8 @@ class ItemPage extends StatelessWidget {
                       height: imgSize,
                       width: imgSize,
                       child: ExtendedImage.network(
-                        'https://picsum.photos/100',
+                        item.imageDownloadUrls[0],
+                        fit: BoxFit.cover,
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -64,11 +75,11 @@ class ItemPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('어린이용 범퍼카', style: Theme.of(context).textTheme.titleLarge,),
+                        Text(item.title, style: Theme.of(context).textTheme.titleLarge,),
                         SizedBox(height: 7),
                         Text('1시간 전', style: Theme.of(context).textTheme.titleMedium),
                         SizedBox(height: 7),
-                        Text('15,000 원'),
+                        Text('${item.price.toString()}원'),
                         Expanded(child: Container(),),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -96,7 +107,7 @@ class ItemPage extends StatelessWidget {
             ),
           );
         },
-        itemCount: 50,);
+        itemCount: items.length);
   }
   Widget _shimmerListView(double imgSize) {
     return Shimmer.fromColors(
@@ -162,7 +173,8 @@ class ItemPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5),
                         ),
                       ),
-                      Expanded(child: Container(),),
+                      //Expanded(child: Container(),),
+                      Spacer(),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [

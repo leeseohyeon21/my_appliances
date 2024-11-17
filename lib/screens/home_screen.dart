@@ -1,11 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_appliances/main.dart';
-import 'package:my_appliances/widget/expandablefab.dart';
 import 'package:provider/provider.dart';
-import 'package:my_appliances/states/user_provider.dart';
-
 import 'home/items_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,20 +19,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('나의 가전', style: Theme.of(context).appBarTheme.titleTextStyle),
-        actions: [
-          IconButton(onPressed: (){
-            FirebaseAuth.instance.signOut();
-            context.go('/');
-          },
-              icon: Icon(Icons.search)
-          ),
-          IconButton(onPressed: (){},
-              icon: Icon(Icons.list)
-          ),
-          IconButton(onPressed: (){},
-              icon: Icon(Icons.notifications)
-          ),
-        ],
+        // actions: [
+        //   IconButton(onPressed: (){
+        //     FirebaseAuth.instance.signOut();
+        //   },
+        //       icon: Icon(Icons.search)
+        //   ),
+        //   IconButton(onPressed: (){},
+        //       icon: Icon(Icons.list)
+        //   ),
+        //   IconButton(onPressed: (){},
+        //       icon: Icon(Icons.notifications)
+        //   ),
+        // ],
       ),
       body: IndexedStack(
         index: _bottomSelectedIndex,
@@ -54,57 +48,34 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      floatingActionButton: ExpandableFab(
-          distance: 90,
-          children: [
-            MaterialButton(
-                onPressed: (){
-                  context.push('/input');
-                },
-                shape: CircleBorder(),
-                height: 40,
-                color: Theme.of(context).colorScheme.primary,
-                child: Icon(Icons.add),
-            ),
-            MaterialButton(
-              onPressed: (){},
-              shape: CircleBorder(),
-              height: 40,
-              color: Theme.of(context).colorScheme.primary,
-              child: Icon(Icons.add),
-            ),
-          ]),
+      floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            context.push('/input');
+          },
+        //backgroundColor: Theme.of(context).colorScheme.primary,
+        shape: CircleBorder(),
+        child: Icon(
+            Icons.add
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _bottomSelectedIndex,
-
         type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(
-                  _bottomSelectedIndex == 0
-                      ? 'assets/icons/home.png'
-                      : 'assets/icons/home.png'),),
+                icon: Icon(Icons.home),
                 label: '홈'
             ),
             BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(
-                    _bottomSelectedIndex == 1
-                        ? 'assets/icons/calendar.png'
-                        : 'assets/icons/calendar.png'),),
+                icon: Icon(Icons.calendar_month),
                 label: '히스토리'
             ),
             BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(
-                    _bottomSelectedIndex == 2
-                        ? 'assets/icons/chat.png'
-                        : 'assets/icons/chat.png'),),
+                icon: Icon(Icons.chat_bubble),
                 label: '채팅'
             ),
             BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(
-                    _bottomSelectedIndex == 3
-                        ? 'assets/icons/user.png'
-                        : 'assets/icons/user.png'),),
+                icon: Icon(Icons.person),
                 label: '내정보'
             ),
           ],

@@ -1,8 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:my_appliances/states/user_provider.dart';
-import 'package:my_appliances/utils/logger.dart';
 
 class IntroPage extends StatelessWidget {
 
@@ -12,26 +10,24 @@ class IntroPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.fromLTRB(40.0, 50.0, 40.0, 500),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text('나의 가전',
-              style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text('나의 가전',
+                style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green),
+              ),
             ),
-            ExtendedImage.asset('assets/images/temp.jpg'),
-            Text('가전제품 기록 앱',
-              //style: Theme.of(context).textTheme.headlineSmall,
-              style: TextStyle(
-                //color: Theme.of(context).colorScheme.primary,
-                fontSize: 24,
-                fontWeight: FontWeight.w500),
-            ),
-            Text('가정내 가전제품을 기록해 두고 효과적으로 관리해봐요.',
-              style: TextStyle(fontSize: 13),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(" '나의 가전'은 가정 내 가전제품을\n체계적으로 기록하고, 상태와 사용 이력을\n효율적으로 관리할 수 있도록 돕는\n어플리케이션입니다.",
+                style: TextStyle(fontSize: 18),
+              ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

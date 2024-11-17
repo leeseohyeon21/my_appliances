@@ -1,14 +1,10 @@
-import 'package:beamer/beamer.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_appliances/firebase_options.dart';
-import 'package:my_appliances/router/locations.dart';
-import 'package:my_appliances/screens/start/auth_page.dart';
-import 'package:my_appliances/screens/start_screen.dart';
 import 'package:my_appliances/screens/splash_screen.dart';
-import 'package:my_appliances/states/user_provider.dart';
+import 'package:my_appliances/states/user_notifier.dart';
 import 'package:provider/provider.dart';
-import 'screens/home_screen.dart';
 import 'package:my_appliances/router/router.dart';
 
 void main() {
@@ -27,7 +23,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   final Future<FirebaseApp> _initialization = Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    //options: DefaultFirebaseOptions.currentPlatform,
   );
 
   @override
@@ -38,7 +34,7 @@ class _MyAppState extends State<MyApp> {
       future: _initialization,
       builder: (context, snapshot) {
         return AnimatedSwitcher(
-          duration: Duration(milliseconds: 900),  //페이드인아웃 효과
+          duration: Duration(milliseconds: 300),  //페이드인아웃 효과
           child: _splashLodingWidget(snapshot),   //스냅샷실행 위젯지정
         );
       }
@@ -47,7 +43,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget _splashLodingWidget(AsyncSnapshot<Object?> snapshot) {
     if(snapshot.hasError) {
-      print('에러가 발생하였습니다.'); 
+      print('Error occurred while loading: ${snapshot.error}');
       return MaterialApp(
         home: Scaffold(
           body: Center(child: Text('Error: &{snapshot.error}')),
@@ -67,11 +63,21 @@ class MyAppliances extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<UserProvider>(
-      create: (BuildContext context){
-        return UserProvider();
-      },
+    // return MultiProvider(
+    //     providers: [
+    //       ChangeNotifierProvider<UserProvider>(
+    //         create: (_) => UserProvider(),
+    //       ),
+    //       ChangeNotifierProvider<UserNotifier>(
+    //         create: (_) => UserNotifier(),
+    //       ),
+    //     ],
+    return ChangeNotifierProvider<UserNotifier>(
+     create: (BuildContext context){
+       return UserNotifier();
+     },
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           hintColor: Colors.grey[350],
           fontFamily: 'DoHyeon',
@@ -103,7 +109,6 @@ class MyAppliances extends StatelessWidget {
             unselectedItemColor: Colors.black38,
           )
         ),
-        debugShowCheckedModeBanner: false,
         routerConfig: router,
       ),
     );

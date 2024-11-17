@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 /*
   !: null값 없음
@@ -8,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 */
 
 class UserModel{
-
   late String userKey; //유저 고유키값
   late String phoneNumber;
   late DateTime createdDate;
@@ -21,18 +19,18 @@ class UserModel{
     this.reference,});
 
   UserModel.fromJson(Map<String, dynamic> json, this.userKey, this.reference)
-    : phoneNumber = json['phoneNumber'],
-    createdDate = json['createdDate'] == null
+    : phoneNumber = json['DOC_PHONENUMBER'] ?? '',
+    createdDate = json['DOC_CREATEDDATE'] == null
         ? DateTime.now().toUtc()
-        : (json['createdDate'] as Timestamp).toDate();
+        : (json['DOC_CREATEDDATE'] as Timestamp).toDate();
 
   UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot)
     : this.fromJson(snapshot.data()!, snapshot.id, snapshot.reference);
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['phoneNumber'] = phoneNumber;
-    map['createdDate'] = createdDate;
+    map['DOC_PHONENUMBER'] = phoneNumber;
+    map['DOC_CREATEDDATE'] = createdDate;
     return map;
   }
 }

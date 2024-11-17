@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,7 +25,8 @@ class _MultiImageSelectState extends State<MultiImageSelect> {
         Size _size = MediaQuery
             .of(context)
             .size;
-        var imgSize = _size.width/3;
+        var imgSize = (_size.width/3) - common_bg_padding*2;
+        var imgCorner = 16.0;
         return SizedBox(
           height: _size.width/3,
           width: _size.width,
@@ -35,40 +37,35 @@ class _MultiImageSelectState extends State<MultiImageSelect> {
                 padding: const EdgeInsets.all(common_sm_padding),
                 child: InkWell(
                   onTap: () async {
-
                     _isPickingImages = true;
-
                     final ImagePicker _picker = ImagePicker();
                     final List<XFile>? images = await _picker.pickMultiImage(imageQuality: 10);
-
-                    if(images != null && images.isNotEmpty){
-                      await context.read<SelectImageNotifier>().setNewImages(images);
-                      _isPickingImages = false;
-                      setState(() {
-
-                      });
+                    if(images != null && images.isNotEmpty) {
+                      await context.read<SelectImageNotifier>().setNewImages(
+                          images);
                     }
+                    _isPickingImages = false;
+                    setState(() {});
                   },
                   child: Container(
-                    width: imgSize,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 2
-                      ),
-                    ),
-                    child: _isPickingImages?Padding(
-                        padding: const EdgeInsets.all(5.0),
+                    child: _isPickingImages
+                        ?Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: CircularProgressIndicator()
                     ):Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.camera_alt_rounded, color: Colors.grey),
                         Text('0/10',
-                        style: Theme.of(context).textTheme.titleSmall,)
+                          style: Theme.of(context).textTheme.titleSmall,)
                       ],
                     ),
+                    width: imgSize,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(imgCorner),
+                      border: Border.all(
+                          color: Colors.grey,
+                          width: 1),),
                   ),
                 ),
               ),
@@ -77,36 +74,32 @@ class _MultiImageSelectState extends State<MultiImageSelect> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
-                          top: common_sm_padding,
-                          bottom: common_sm_padding,
-                          right: common_sm_padding
+                          right: common_bg_padding,
+                          top: common_bg_padding,
+                          bottom: common_bg_padding,
                         ),
                         child: ExtendedImage.memory(
                           selectImageNotifier.images[index],
-                          fit: BoxFit.cover,
-                          height: imgSize,
                           width: imgSize,
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(16),
+                          height: imgSize,
+                          fit: BoxFit.cover,
                           loadStateChanged: (state){
-
                             switch(state.extendedImageLoadState){
-
                               case LoadState.loading:
                                 return Container(
-                                  padding: EdgeInsets.all(imgSize/5),
-                                    height: imgSize,
                                     width: imgSize,
+                                    height: imgSize,
+                                  padding: EdgeInsets.all(imgSize/3),
                                     child: CircularProgressIndicator()
                               );
-
                               case LoadState.completed:
                                 return null;
-
                               case LoadState.failed:
                                 return Icon(Icons.cancel);
                             }
                           },
+                          borderRadius: BorderRadius.circular(imgCorner),
+                          shape: BoxShape.rectangle,
                         ),
                       ),
                       Positioned(
@@ -115,18 +108,14 @@ class _MultiImageSelectState extends State<MultiImageSelect> {
                         width: 40,
                         height: 40,
                         child: IconButton(
-                          padding: EdgeInsets.zero,
+                          padding: EdgeInsets.all(8),
                           onPressed: (){
                             selectImageNotifier.removeImage(index);
-                            setState(() {
-
-                            });
                           },
                           icon: Icon(
                             Icons.remove_circle,
-                            size: 30,
-                            color: Colors.red[300]
                           ),
+                          color: Colors.deepOrange,
                         ),
                       ),
                     ]

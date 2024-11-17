@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:my_appliances/constants/data_keys.dart';
 import 'package:my_appliances/data/user_model.dart';
 import 'package:my_appliances/utils/logger.dart';
@@ -29,8 +28,13 @@ class UserService{
   Future<UserModel> getUserModel(String userKey) async{
     DocumentReference<Map<String, dynamic>> documentReference =
     FirebaseFirestore.instance.collection(COL_USERS).doc(userKey);
-    final DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentReference.get();
+
+    final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+    await documentReference.get();
+
+    logger.d("Document data: ${documentSnapshot.data()}");
     UserModel userModel = UserModel.fromSnapshot(documentSnapshot);
+    logger.d("userModel: $userModel");
     return userModel;
   }
 }

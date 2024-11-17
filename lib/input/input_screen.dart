@@ -5,13 +5,12 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_appliances/constants/common_size.dart';
 import 'package:my_appliances/data/item_model.dart';
-import 'package:my_appliances/input/category_input_screen.dart';
 import 'package:my_appliances/input/multi_image_select.dart';
-import 'package:my_appliances/repo/image_store.dart';
+import 'package:my_appliances/repo/image_storage.dart';
 import 'package:my_appliances/repo/item_service.dart';
 import 'package:my_appliances/states/category_notifier.dart';
 import 'package:my_appliances/states/select_image_notifier.dart';
-import 'package:my_appliances/states/user_provider.dart';
+import 'package:my_appliances/states/user_notifier.dart';
 import 'package:my_appliances/utils/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -23,28 +22,28 @@ class InputScreen extends StatefulWidget {
 }
 
 class _InputScreenState extends State<InputScreen> {
+  bool _suggetPriceSelected = false;
+
+  TextEditingController _priceController = TextEditingController();
+
+  var _border = UnderlineInputBorder(
+      borderSide: BorderSide(
+          color: Colors.transparent
+      )
+  );
 
   var _divider = Divider(
     height: 1,
-    color: Colors.grey[300],
     thickness: 1,
+    color: Colors.grey[350],
     indent: common_bg_padding,
     endIndent: common_bg_padding,
   );
 
-  var _border = UnderlineInputBorder(
-    borderSide: BorderSide(
-    color: Colors.transparent
-    )
-  );
-
-  bool _suggetPriceSelected = false;
-
-  TextEditingController _priceController = TextEditingController();
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _DetailController = TextEditingController();
-
   bool isCreatingItem = false;
+
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _detailController = TextEditingController();
 
   void attemptCreateItem() async{
     //현재유저 로그인 상태일때만 (null일떄는 빈값 리턴)
@@ -52,15 +51,31 @@ class _InputScreenState extends State<InputScreen> {
     isCreatingItem = true;
     setState(() {});
 
-    final String itemKey = ItemModel.generateItemKey(FirebaseAuth.instance.currentUser!.uid);
     final String userKey = FirebaseAuth.instance.currentUser!.uid;
-    final num? price = num.tryParse(_priceController.text.replaceAll('.', '').replaceAll('원', ''));
+    final String itemKey = ItemModel.generateItemKey(userKey);
+    logger.d('Generated itemKey: $itemKey');
 
     List<Uint8List> images = context.read<SelectImageNotifier>().images;
-    List<String> downloadUrls = await ImageStorage.uploadImages(images, itemKey);
+    logger.d('Selected images count: ${images.length}');
 
-    UserProvider userProvider = context.read<UserProvider>();
-    if(userProvider.userModel == null) return;
+    if(images.isEmpty){
+      logger.e('No images selected.');
+      return;
+    }
+
+    UserNotifier userNotifier = context.read<UserNotifier>();
+
+    if(userNotifier.userModel == null) {
+      logger.d('userModel is null.');
+      return;
+    }
+
+    List<String> downloadUrls =
+    await ImageStorage.uploadImages(images, itemKey);
+    logger.d('downloadUrls accepted successfully: $downloadUrls');
+
+    final num? price =
+    num.tryParse(_priceController.text.replaceAll(new RegExp(r"\D"), ''));
 
     ItemModel itemModel = ItemModel(
         itemKey: itemKey,
@@ -70,18 +85,14 @@ class _InputScreenState extends State<InputScreen> {
         category: context.read<CategoryNotifier>().currentCategoryInEng,
         price: price??0,
         negotiable: _suggetPriceSelected,
-        detail: _DetailController.text,
+        detail: _detailController.text,
         createdDate: DateTime.now().toUtc(),
     );
 
-    logger.d('upload finished - ${downloadUrls.toString()}');
-
     await ItemService().createNewItem(itemModel.toJson(), itemKey);
 
-    isCreatingItem = false;
-    setState(() {
+    context.pop();
 
-    });
   }
 
   @override
@@ -121,9 +132,7 @@ class _InputScreenState extends State<InputScreen> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () async {
-
-                  },
+                  onPressed: attemptCreateItem,
                   style: TextButton.styleFrom(
                       foregroundColor: Colors.black87,
                       backgroundColor: Theme
@@ -139,12 +148,17 @@ class _InputScreenState extends State<InputScreen> {
                   ),
                 ),
               ],
-              title: Text('가전제품 등록'),
+              title: Text('가전제품 등록',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               centerTitle: true,
             ),
             body: ListView(
               children: [
                 MultiImageSelect(),
+                SizedBox(
+                  height: 15,
+                ),
                 _divider,
                 TextFormField(
                   controller: _titleController,
@@ -152,7 +166,7 @@ class _InputScreenState extends State<InputScreen> {
                     contentPadding: EdgeInsets.symmetric(
                         horizontal: common_bg_padding
                     ),
-                    hintText: '상품 제목',
+                    hintText: '제품명',
                     border: _border,
                     enabledBorder: _border,
                     focusedBorder: _border,
@@ -193,7 +207,7 @@ class _InputScreenState extends State<InputScreen> {
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: common_bg_padding
                             ),
-                            hintText: '상품가격을 입력하세요',
+                            hintText: '구매가격을 입력하세요',
                             border: _border,
                             enabledBorder: _border,
                             focusedBorder: _border,
@@ -239,13 +253,14 @@ class _InputScreenState extends State<InputScreen> {
                 ),
                 _divider,
                 TextFormField(
+                  controller: _detailController,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
                         horizontal: common_bg_padding
                     ),
-                    hintText: '상품 및 필요한 세부설명을 입력해주세요.',
+                    hintText: '추가 메모 사항이 있다면 남겨보세요.',
                     border: _border,
                     enabledBorder: _border,
                     focusedBorder: _border,
