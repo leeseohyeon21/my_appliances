@@ -1,4 +1,3 @@
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +19,8 @@ class IntroPage extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green),
+                    color: Colors.purple),
+
               ),
             ),
             Align(

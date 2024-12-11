@@ -1,8 +1,8 @@
 const COL_USERS = 'users';
-const COL_ITEMS = 'items';
 const COL_USER_ITEMS = 'user_items';
-const COL_CHATROOMS = 'chatrooms';
-const COL_CHATS = 'chats';
+const COL_USER_PRODUCTS = 'user_products';
+const COL_USER_PURCHASE_PRODUCTS = 'user_purchase_products';
+const COL_USER_RENTAL_PRODUCTS = 'user_rental_products';
 
 const DOC_ITEMIMAGE = "itemImage";
 const DOC_ITEMTITLE = "itemTitle";
@@ -27,3 +27,17 @@ const DOC_NEGOTIABLE = "negotiable";
 const DOC_DETAIL = "detail";
 const DOC_CREATEDDATE = "createdDate";
 const DOC_PHONENUMBER = "phoneNumber";
+
+const DOC_MODELNAME = "modelName";
+const DOC_PRODUCTNAME = "productName";
+const DOC_BRAND = "brand";
+const DOC_PURCHASEDATE = "purchaseDate";
+const DOC_ASPERIOD = "ASPeriod";
+const DOC_MEMO = "memo";
+
+const DOC_LENTALDATE = "lentalDate";
+const DOC_TERMINALDATE = "terminalDate";
+const DOC_DUTYPERIOD = "dutyPeriod";
+const DOC_MANAGEMENT = "management";
+const DOC_FIRSTPRICE = "firstPrice";
+const DOC_MONTHPRICE = "monthPrice";

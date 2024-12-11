@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:my_appliances/constants/data_keys.dart';
 
 /*
   !: null값 없음
@@ -19,18 +20,18 @@ class UserModel{
     this.reference,});
 
   UserModel.fromJson(Map<String, dynamic> json, this.userKey, this.reference)
-    : phoneNumber = json['DOC_PHONENUMBER'] ?? '',
-    createdDate = json['DOC_CREATEDDATE'] == null
+    : phoneNumber = json[DOC_PHONENUMBER],
+    createdDate = json[DOC_CREATEDDATE] == null
         ? DateTime.now().toUtc()
-        : (json['DOC_CREATEDDATE'] as Timestamp).toDate();
+        : (json[DOC_CREATEDDATE] as Timestamp).toDate();
 
   UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot)
     : this.fromJson(snapshot.data()!, snapshot.id, snapshot.reference);
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['DOC_PHONENUMBER'] = phoneNumber;
-    map['DOC_CREATEDDATE'] = createdDate;
+    map[DOC_PHONENUMBER] = phoneNumber;
+    map[DOC_CREATEDDATE] = createdDate;
     return map;
   }
 }
